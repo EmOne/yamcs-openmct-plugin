@@ -1,8 +1,8 @@
-(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(global.YamcsPlugin = factory());
-}(this, (function () { 'use strict';
+// (function (global, factory) {
+// 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+// 	typeof define === 'function' && define.amd ? define(factory) :
+// 	(global.YamcsPlugin = factory());
+// }(this, (function () { 'use strict';
 
 /*****************************************************************************
  * Open MCT, Copyright (c) 2014-2017, United States Government
@@ -25,6 +25,7 @@
  * this source code distribution or the Licensing information page available
  * at runtime from the About dialog for additional information.
  *****************************************************************************/
+const axios = require('axios');
 
 const ENG_TYPES = {
   UINT32: 'uint32Value',
@@ -41,7 +42,6 @@ const DATUM_TYPES = {
 };
 
 function YamcsPlugin(options) {
-  
   const host = options.host || 'localhost';
   const port = options.port || '8090';
   const instance = options.instance || 'simulator';
@@ -54,7 +54,7 @@ function YamcsPlugin(options) {
   function getDictionary() {
     return axios
       .get(`http://${host}:${port}/api/mdb/${instance}/parameters`)
-      .then(response => response.data.parameter);
+      .then((response) => response.data.parameters);
   }
   function transformYamcsToMCT(identifier) {
     const YamcsObject = TELEMETRY.then(param =>
@@ -86,7 +86,7 @@ function YamcsPlugin(options) {
   }
   function getParamForHistorical(identifier) {
     return TELEMETRY.then(param => param.filter(p => p.name === identifier.name).pop()).then(res =>
-      Promise.resolve(res.url)
+      Promise.resolve(res.qualifiedName)
     );
   }
 
@@ -186,7 +186,8 @@ function YamcsPlugin(options) {
         });
       }
     });
-    const socket = new WebSocket(`ws://${host}:${port}/${instance}/_websocket`); // eslint-disable-line
+    // const socket = new WebSocket(`ws://${host}:${port}/${instance}/_websocket`); // eslint-disable-line
+    const socket = new WebSocket(`http://${host}:${port}/api/websocket`);
     const listeners = {};
     socket.onmessage = function(event) {
       const point = JSON.parse(event.data);
@@ -256,6 +257,7 @@ function YamcsPlugin(options) {
   };
 }
 
-return YamcsPlugin;
+// return YamcsPlugin;
+// })));
 
-})));
+export default YamcsPlugin;

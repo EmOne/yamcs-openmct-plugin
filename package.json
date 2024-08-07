@@ -27,11 +27,11 @@
   },
   "homepage": "https://github.com/ev1stensberg/yamcs-openmct-plugin#readme",
   "dependencies": {
-    "axios": "^0.16.2"
+    "axios": "^1.7.3"
   },
   "devDependencies": {
     "eslint-config-google": "^0.9.1",
-    "prettier-eslint-cli": "^4.3.2",
+    "prettier-eslint-cli": "^8.0.1",
     "rollup-plugin-commonjs": "^8.2.1",
     "rollup-plugin-node-resolve": "^3.0.0"
   }
